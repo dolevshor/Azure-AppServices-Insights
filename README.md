@@ -99,8 +99,8 @@ Follow this steps to use the Workbook:
 <img src="https://user-images.githubusercontent.com/69309933/172807673-dfc63741-0c40-47c0-ab58-d39309b06e69.png" width="700"> 
 
 - Select the _'Gallery Template'_ (step 1)
-- Replace the JSON code with this JSON code [Azure AppService Insights JSON](https://raw.githubusercontent.com/dolevshor/Azure-AppService-Insights/main/Workbook/Azure%20AppService%20Insights.workbook) (step 2)
-  - We use the _Gallery Templaty type_ (step 1), so we need to use the _'Azure AppService Insights.workbook'_ and not the _'Azure AppService Insights.json'_.
+- Replace the JSON code with this JSON code [Azure AppService Insights JSON](https://raw.githubusercontent.com/dolevshor/Azure-AppService-Insights/main/Workbook/Azure%20App%20Service%20Insights.workbook) (step 2)
+  - We use the _Gallery Templaty type_ (step 1), so we need to use the _'Azure App Service Insights.workbook'_ and not the _'Azure App Service Insights.json'_.
 - Click _'Apply'_ (step 3)
 
 <img src="https://user-images.githubusercontent.com/69309933/172807762-17aec6f9-4a81-4d5b-9017-673a0ab6b26e.png" width="700"> 
