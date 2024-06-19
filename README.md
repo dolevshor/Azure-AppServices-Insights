@@ -4,6 +4,12 @@ The 'Azure App Services Insights' workbook offers a comprehensive view of your A
 
 It enables you to delve into and compare key metrics effortlessly, gaining insights into usage trends, optimizing performance, and guiding strategic decisions effectively.
 
+![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/014a0b66-4219-4d07-bb1a-9877917d9843)
+
+![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/73892ad3-5f9b-4ca6-acbc-8ec68fe3cf2b)
+
+![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/51d38b42-85f4-4055-a9d0-2e7faab51176)
+
 ## Introduction
 
 Azure App Service offers flexible scaling options (both Scale Up and Scale Out), supports multiple operating systems (Windows and Linux), and enables hosting multiple apps on the same App Service Plan.
