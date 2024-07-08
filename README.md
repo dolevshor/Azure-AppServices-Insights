@@ -4,11 +4,24 @@ The 'Azure App Services Insights' workbook offers a comprehensive view of your A
 
 It enables you to delve into and compare key metrics effortlessly, gaining insights into usage trends, optimizing performance, and guiding strategic decisions effectively.
 
-![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/014a0b66-4219-4d07-bb1a-9877917d9843)
+![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/128f640f-7aa3-41dd-bd49-7ea944b28404)
 
-![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/73892ad3-5f9b-4ca6-acbc-8ec68fe3cf2b)
+![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/8cff5edc-fa0d-4e3f-8e61-0c34d64d87f7)
 
-![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/51d38b42-85f4-4055-a9d0-2e7faab51176)
+![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/3cd05772-b07d-469e-a717-b1ab1106b5f3)
+
+### Additional Metrics
+
+Expanding the Additional Metrics will allow to view and compare all the Metrics supported by the resource type. (group by categories)
+
+- App Service Plan: Data, Sockets, TCP, Queue Length
+- App Service: Requests/Response, Data, HTTP, IO, Garbage Collections, Others 
+- Staging Slot: Requests/Response, Data, HTTP, IO, Garbage Collections, App Domains, Others
+
+![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/a603f93b-2520-4541-96d4-790a410406cd)
+
+![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/8b7adac7-52a5-4286-acef-b5259358b4b4)
+
 
 ## Introduction
 
@@ -64,7 +77,34 @@ Types of views this workbook provides:
     - Memory Working Set (Avg)
   - Slots
     - CPU Time (Sum)
-    - Memory Working Set (Avg) 
+    - Memory Working Set (Avg)
+
+- **Inventory**
+  - App Service Plan
+    - Count by Subscription Id
+    - Count by Resource Group
+    - Count by Location
+    - Count by Status
+    - Count by Kind
+    - Count by Kind
+    - Count by Size
+    - Count by Tier
+  - App Service
+    - Count by Subscription Id
+    - Count by Resource Group
+    - Count by Location
+    - Count by State
+    - Count by Kind
+    - Count by sku
+    - Count by App Service Plan
+  - Slots
+    - Count by Subscription Id
+    - Count by Resource Group
+    - Count by Location
+    - Count by State
+    - Count by Kind
+    - Count by sku
+    - Count by App Service Plan
 
 #### Filters
 
