@@ -4,6 +4,10 @@ The 'Azure App Services Insights' workbook offers a comprehensive view of your A
 
 It enables you to delve into and compare key metrics effortlessly, gaining insights into usage trends, optimizing performance, and guiding strategic decisions effectively.
 
+![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/2fb16d76-53b7-408b-a1d5-58abd3df7fc2)
+
+
+
 ### Overview
 
 ![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/128f640f-7aa3-41dd-bd49-7ea944b28404)
