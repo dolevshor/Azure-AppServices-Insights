@@ -31,7 +31,7 @@
               "value::selected"
             ],
             "value": [
-              "/subscriptions/6ca6f98e-9495-4385-b0f3-333d4182161f"
+              "value::all"
             ],
             "typeSettings": {
               "additionalResourceOptions": [
@@ -52,7 +52,7 @@
             "multiSelect": true,
             "quote": "'",
             "delimiter": ",",
-            "query": "where type =~ 'microsoft.web/serverfarms'\r\n| summarize Count = count() by resourceGroup\r\n| order by Count desc\r\n| extend Rank = row_number()\r\n| project value = resourceGroup, label = resourceGroup, selected = Rank == 1",
+            "query": "where type == 'microsoft.web/serverfarms' or type == 'microsoft.web/sites' or type == 'microsoft.web/sites/slots'\r\n| summarize Count = count() by resourceGroup\r\n| order by Count desc\r\n| extend Rank = row_number()\r\n| project value = resourceGroup, label = resourceGroup, selected = Rank == 1",
             "crossComponentResources": [
               "{Subscription}"
             ],
@@ -127,7 +127,7 @@
             "type": 4,
             "isRequired": true,
             "value": {
-              "durationMs": 604800000
+              "durationMs": 86400000
             },
             "typeSettings": {
               "selectableValues": [
@@ -216,6 +216,14 @@
                   "linkTarget": "parameter",
                   "linkLabel": "Monitor",
                   "subTarget": "Monitor"
+                },
+                {
+                  "id": "4a9ecfa7-e64f-42b8-aa35-06f2cdc26086",
+                  "cellValue": "selectedTab",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Inventory",
+                  "subTarget": "Inventory",
+                  "style": "link"
                 }
               ]
             },
@@ -236,21 +244,21 @@
                     "json": "### Azure App Services Insights Workbook\r\n\r\nThe purpose of this workbook is to provide an overview of your Azure App Services resources.\r\n\r\n<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"19px\" height=\"19px\" viewBox=\"0 0 19 18\" version=\"1.1\"><g id=\"surface1\"><path style=\" stroke:none;fill-rule:evenodd;fill:rgb(14.117647%,16.078431%,18.431373%);fill-opacity:1;\" d=\"M 9.472656 0 C 4.234375 0 0 4.125 0 9.226562 C 0 13.308594 2.714844 16.761719 6.476562 17.984375 C 6.945312 18.074219 7.121094 17.785156 7.121094 17.539062 C 7.121094 17.324219 7.105469 16.59375 7.105469 15.828125 C 4.46875 16.378906 3.921875 14.726562 3.921875 14.726562 C 3.496094 13.660156 2.871094 13.382812 2.871094 13.382812 C 2.007812 12.820312 2.933594 12.820312 2.933594 12.820312 C 3.890625 12.878906 4.390625 13.765625 4.390625 13.765625 C 5.238281 15.171875 6.601562 14.773438 7.152344 14.53125 C 7.230469 13.933594 7.480469 13.519531 7.746094 13.292969 C 5.644531 13.078125 3.433594 12.285156 3.433594 8.738281 C 3.433594 7.730469 3.808594 6.90625 4.40625 6.265625 C 4.3125 6.035156 3.984375 5.085938 4.5 3.820312 C 4.5 3.820312 5.300781 3.574219 7.105469 4.765625 C 7.875 4.566406 8.671875 4.460938 9.472656 4.460938 C 10.269531 4.460938 11.085938 4.566406 11.839844 4.765625 C 13.644531 3.574219 14.441406 3.820312 14.441406 3.820312 C 14.960938 5.085938 14.628906 6.035156 14.535156 6.265625 C 15.148438 6.90625 15.507812 7.730469 15.507812 8.738281 C 15.507812 12.285156 13.296875 13.0625 11.179688 13.292969 C 11.527344 13.582031 11.824219 14.132812 11.824219 15.003906 C 11.824219 16.242188 11.808594 17.234375 11.808594 17.539062 C 11.808594 17.785156 11.980469 18.074219 12.453125 17.984375 C 16.214844 16.761719 18.925781 13.308594 18.925781 9.226562 C 18.941406 4.125 14.695312 0 9.472656 0 Z M 9.472656 0 \"/></g></svg>\r\n&nbsp;[<span style=\"font-family: Open Sans; font-weight: 620; font-size: 14px;margin:-10px 0px 0px 0px;position: relative;top:-3px;left:-4px;\">Please submit any issues </span>](https://github.com/dolevshor/Azure-AppServices-Insights/issues) <span style=\"font-family: Open Sans; font-weight: 620; font-size: 14px;margin:-10px 0px 0px 0px;position: relative;top:-3px;left:-4px;\"> with the workbook template to GitHub.</span>",
                     "style": "upsell"
                   },
-                  "name": "text - 5 - Copy - Copy"
+                  "name": "text - Main Title"
                 },
                 {
                   "type": 1,
                   "content": {
-                    "json": "#### App Service Plans",
+                    "json": "### App Service Plans",
                     "style": "upsell"
                   },
-                  "name": "text - 5 - Copy"
+                  "name": "text - Overview - App Service Plans"
                 },
                 {
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "resources \r\n| where type == \"microsoft.web/serverfarms\"\r\n| where resourceGroup in~ (split(\"{ResourceGroup:label}\", \", \"))\r\n| where name in~ (split(\"{AppSP:label}\", \", \"))\r\n| extend Details = pack_all()\r\n| project id, resourceGroup, location, kind, size = sku.size, tier = sku.tier, status = properties.status, numberOfSites = properties.numberOfSites, instances = toint(sku.capacity), maximumNumberOfWorkers = properties.maximumNumberOfWorkers, Details",
+                    "query": "resources \r\n| where type == \"microsoft.web/serverfarms\"\r\n| where resourceGroup in~ (split(\"{ResourceGroup:label}\", \", \"))\r\n| where name in~ (split(\"{AppSP:label}\", \", \"))\r\n| extend Details = pack_all()\r\n| project id, resourceGroup, location, kind, size = sku.size, tier = sku.tier, status = properties.status, numberOfSites = properties.numberOfSites, instances = toint(sku.capacity), maximumNumberOfWorkers = properties.maximumNumberOfWorkers, subscriptionId, Details",
                     "size": 3,
                     "queryType": 1,
                     "resourceType": "microsoft.resourcegraph/resources",
@@ -259,6 +267,19 @@
                     ],
                     "gridSettings": {
                       "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "Resource",
+                            "linkIsContextBlade": false,
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "id",
+                          "formatter": 5
+                        },
                         {
                           "columnMatch": "location",
                           "formatter": 17
@@ -288,6 +309,10 @@
                           "formatter": 1
                         },
                         {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
                           "columnMatch": "Details",
                           "formatter": 7,
                           "formatOptions": {
@@ -297,6 +322,15 @@
                           }
                         }
                       ],
+                      "filter": true,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "id"
+                      },
                       "labelSettings": [
                         {
                           "columnId": "id",
@@ -339,6 +373,10 @@
                           "label": "Maximum scale (instance)"
                         },
                         {
+                          "columnId": "subscriptionId",
+                          "label": "Subscription"
+                        },
+                        {
                           "columnId": "Details",
                           "label": "Details"
                         }
@@ -350,16 +388,16 @@
                 {
                   "type": 1,
                   "content": {
-                    "json": "#### App Services + Slots",
+                    "json": "### App Services",
                     "style": "upsell"
                   },
-                  "name": "text - 5 - Copy - Copy"
+                  "name": "text - Overview - App Services"
                 },
                 {
                   "type": 3,
                   "content": {
                     "version": "KqlItem/1.0",
-                    "query": "resources \r\n| where type == \"microsoft.web/sites\" or type =~ \"microsoft.web/sites/slots\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| extend type = tostring(split(type, '/')[-1])\r\n| extend Details = pack_all()\r\n| project id, resourceGroup, location, kind, type, SKU = properties.sku, AppServicePlan, State = properties.state, Details",
+                    "query": "resources \r\n| where type == \"microsoft.web/sites\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| extend type = tostring(split(type, '/')[-1])\r\n| extend Details = pack_all()\r\n| project id, resourceGroup, location, kind, type, SKU = properties.sku, AppServicePlan, State = properties.state, subscriptionId, Details",
                     "size": 3,
                     "queryType": 1,
                     "resourceType": "microsoft.resourcegraph/resources",
@@ -368,6 +406,19 @@
                     ],
                     "gridSettings": {
                       "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkIsContextBlade": false,
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "id",
+                          "formatter": 5
+                        },
                         {
                           "columnMatch": "resourceGroup",
                           "formatter": 1
@@ -385,16 +436,20 @@
                           "formatter": 1
                         },
                         {
-                          "columnMatch": "State",
-                          "formatter": 1
-                        },
-                        {
                           "columnMatch": "SKU",
                           "formatter": 1
                         },
                         {
                           "columnMatch": "AppServicePlan",
                           "formatter": 1
+                        },
+                        {
+                          "columnMatch": "State",
+                          "formatter": 1
+                        },
+                        {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
                         },
                         {
                           "columnMatch": "Details",
@@ -406,6 +461,15 @@
                           }
                         }
                       ],
+                      "filter": true,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "id"
+                      },
                       "labelSettings": [
                         {
                           "columnId": "id",
@@ -440,6 +504,10 @@
                           "label": "State"
                         },
                         {
+                          "columnId": "subscriptionId",
+                          "label": "Subscription"
+                        },
+                        {
                           "columnId": "Details",
                           "label": "Details"
                         }
@@ -447,6 +515,137 @@
                     }
                   },
                   "name": "query - All App Services"
+                },
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "### Slots",
+                    "style": "upsell"
+                  },
+                  "name": "text - Overview - Slots"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/sites/slots\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| extend type = tostring(split(type, '/')[-1])\r\n| extend Details = pack_all()\r\n| project id, resourceGroup, location, kind, type, SKU = properties.sku, AppServicePlan, State = properties.state, subscriptionId, Details",
+                    "size": 3,
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkIsContextBlade": false,
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "id",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "resourceGroup",
+                          "formatter": 1
+                        },
+                        {
+                          "columnMatch": "location",
+                          "formatter": 17
+                        },
+                        {
+                          "columnMatch": "kind",
+                          "formatter": 1
+                        },
+                        {
+                          "columnMatch": "type",
+                          "formatter": 1
+                        },
+                        {
+                          "columnMatch": "SKU",
+                          "formatter": 1
+                        },
+                        {
+                          "columnMatch": "AppServicePlan",
+                          "formatter": 1
+                        },
+                        {
+                          "columnMatch": "State",
+                          "formatter": 1
+                        },
+                        {
+                          "columnMatch": "subscriptionId",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "Details",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "🔍 View Details",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ],
+                      "filter": true,
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "subscriptionId"
+                        ],
+                        "expandTopLevel": true,
+                        "finalBy": "id"
+                      },
+                      "labelSettings": [
+                        {
+                          "columnId": "id",
+                          "label": "Name"
+                        },
+                        {
+                          "columnId": "resourceGroup",
+                          "label": "Resource Group"
+                        },
+                        {
+                          "columnId": "location",
+                          "label": "Location"
+                        },
+                        {
+                          "columnId": "kind",
+                          "label": "Kind"
+                        },
+                        {
+                          "columnId": "type",
+                          "label": "Type"
+                        },
+                        {
+                          "columnId": "SKU",
+                          "label": "SKU"
+                        },
+                        {
+                          "columnId": "AppServicePlan",
+                          "label": "App Service Plan"
+                        },
+                        {
+                          "columnId": "State",
+                          "label": "State"
+                        },
+                        {
+                          "columnId": "subscriptionId",
+                          "label": "Subscription"
+                        },
+                        {
+                          "columnId": "Details",
+                          "label": "Details"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "query - All App Services Staging Slots"
                 }
               ]
             },
@@ -466,18 +665,632 @@
                 {
                   "type": 1,
                   "content": {
-                    "json": "## Azure App Service Metrics Dashboard\r\nExplore and compare the most important metrics for Azure App Services and understand your usage trends easily. ([Azure App Service monitoring data reference](https://learn.microsoft.com/en-us/azure/app-service/monitor-app-service-reference))",
+                    "json": "## Azure App Service Inventory Dashboard\r\nInventory dashboard for Azure App Service.",
                     "style": "upsell"
                   },
-                  "name": "text - 5 - Copy - Copy"
+                  "name": "text - Inventory -Main Title"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type == 'microsoft.web/serverfarms' or type == 'microsoft.web/sites' or type == 'microsoft.web/sites/slots'\r\n| summarize count() by type",
+                    "size": 3,
+                    "noDataMessage": "No resources found",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "tiles",
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "type",
+                        "formatter": 16,
+                        "formatOptions": {
+                          "showIcon": true
+                        }
+                      },
+                      "leftContent": {
+                        "columnMatch": "count_",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      },
+                      "showBorder": true,
+                      "sortCriteriaField": "count_",
+                      "sortOrderField": 2
+                    }
+                  },
+                  "name": "query - Inventory - All"
                 },
                 {
                   "type": 1,
                   "content": {
-                    "json": "#### App Service Plan\r\n[Azure App Service Plans Metrics](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/supported-metrics/microsoft-web-serverfarms-metrics)",
+                    "json": "### App Service Plans",
                     "style": "upsell"
                   },
-                  "name": "text - 5 - Copy"
+                  "name": "text - Inventory - App Service Plans"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/serverfarms\"\r\n| where resourceGroup in~ (split(\"{ResourceGroup:label}\", \", \"))\r\n| where name in~ (split(\"{AppSP:label}\", \", \"))\r\n| summarize count(type) by subscriptionId",
+                    "size": 3,
+                    "title": "Count by Subscription Id",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - App Service Plans by Subscription Id"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/serverfarms\"\r\n| where resourceGroup in~ (split(\"{ResourceGroup:label}\", \", \"))\r\n| where name in~ (split(\"{AppSP:label}\", \", \"))\r\n| summarize count(type) by resourceGroup",
+                    "size": 3,
+                    "title": "Count by Resource Group",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - App Service Plans by Resource Group"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/serverfarms\"\r\n| where resourceGroup in~ (split(\"{ResourceGroup:label}\", \", \"))\r\n| where name in~ (split(\"{AppSP:label}\", \", \"))\r\n| summarize count(type) by location",
+                    "size": 3,
+                    "title": "Count by Location",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - App Service Plans by Location"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/serverfarms\"\r\n| where resourceGroup in~ (split(\"{ResourceGroup:label}\", \", \"))\r\n| where name in~ (split(\"{AppSP:label}\", \", \"))\r\n| extend status = properties.status\r\n| summarize count(type) by tostring(status)",
+                    "size": 3,
+                    "title": "Count by Status",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - App Service Plans by Status"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/serverfarms\"\r\n| where resourceGroup in~ (split(\"{ResourceGroup:label}\", \", \"))\r\n| where name in~ (split(\"{AppSP:label}\", \", \"))\r\n| summarize count(type) by tostring(kind)",
+                    "size": 3,
+                    "title": "Count by Kind",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - App Service Plans by Kind"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/serverfarms\"\r\n| where resourceGroup in~ (split(\"{ResourceGroup:label}\", \", \"))\r\n| where name in~ (split(\"{AppSP:label}\", \", \"))\r\n| extend size = sku.size\r\n| summarize count(type) by tostring(size)",
+                    "size": 3,
+                    "title": "Count by Size",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - App Service Plans by Size"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/serverfarms\"\r\n| where resourceGroup in~ (split(\"{ResourceGroup:label}\", \", \"))\r\n| where name in~ (split(\"{AppSP:label}\", \", \"))\r\n| extend tier = sku.tier\r\n| summarize count(type) by tostring(tier)",
+                    "size": 3,
+                    "title": "Count by Tier",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - App Service Plans by Tier"
+                },
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "### App Services",
+                    "style": "upsell"
+                  },
+                  "name": "text - Inventory - App Services"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type == \"microsoft.web/sites\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| summarize count(type) by subscriptionId",
+                    "size": 3,
+                    "title": "Count by Subscription Id",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - App Services by Subscription Id"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type == \"microsoft.web/sites\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| summarize count(type) by resourceGroup",
+                    "size": 3,
+                    "title": "Count by Reource Group",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - App Services by Resource Group"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type == \"microsoft.web/sites\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| summarize count(type) by location",
+                    "size": 3,
+                    "title": "Count by Location",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - App Services by Location"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources\r\n| where type == \"microsoft.web/sites\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| extend State = properties.state\r\n| summarize count(type) by tostring(State)",
+                    "size": 3,
+                    "title": "Count by State",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - App Services by State"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/sites\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| summarize count(type) by kind",
+                    "size": 3,
+                    "title": "Count by Kind",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - App Services by Kind"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/sites\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| extend sku = properties.sku\r\n| summarize count(type) by tostring(sku)",
+                    "size": 3,
+                    "title": "Count by sku",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - App Services by sku"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/sites\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| summarize count(type) by AppServicePlan",
+                    "size": 3,
+                    "title": "Count by App Service Plan",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - App Services by App Service Plan"
+                },
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "### Slots",
+                    "style": "upsell"
+                  },
+                  "name": "text - Inventory - Slots"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/sites/slots\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| summarize count(type) by subscriptionId",
+                    "size": 3,
+                    "title": "Count by Subscription Id",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "tileSettings": {
+                      "showBorder": false,
+                      "titleContent": {
+                        "columnMatch": "location",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "count_type",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    },
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - Slots by Subscription Id"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/sites/slots\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| summarize count(type) by resourceGroup",
+                    "size": 3,
+                    "title": "Count by Resource Group",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "tileSettings": {
+                      "showBorder": false,
+                      "titleContent": {
+                        "columnMatch": "location",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "count_type",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    },
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - App Services by Resource Group"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/sites/slots\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| summarize count(type) by location",
+                    "size": 3,
+                    "title": "Count by Location",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "tileSettings": {
+                      "showBorder": false,
+                      "titleContent": {
+                        "columnMatch": "location",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "count_type",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    },
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - Slots by Location"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/sites/slots\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| extend State = properties.state\r\n| summarize count(type) by tostring(State)",
+                    "size": 3,
+                    "title": "Count by State",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "tileSettings": {
+                      "showBorder": false,
+                      "titleContent": {
+                        "columnMatch": "State",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "count_type",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    },
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - Slots by State"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/sites/slots\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| summarize count(type) by kind",
+                    "size": 3,
+                    "title": "Count by Kind",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - App Services by Kind"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/sites/slots\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| extend sku = properties.sku\r\n| summarize count(type) by tostring(sku)",
+                    "size": 3,
+                    "title": "Count by sku",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - Slots by sku"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "resources \r\n| where type == \"microsoft.web/sites/slots\"\r\n| extend AppServicePlan = tostring(split(properties.serverFarmId, '/')[-1])\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| where AppServicePlan in~ (split(\"{AppSP:label}\", \", \"))\r\n| where name in~ (split(\"{Apps:label}\", \", \"))\r\n| summarize count(type) by AppServicePlan",
+                    "size": 3,
+                    "title": "Count by App Service Plan",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "crossComponentResources": [
+                      "{Subscription}"
+                    ],
+                    "visualization": "piechart",
+                    "chartSettings": {
+                      "showMetrics": false,
+                      "showLegend": true
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - Inventory - Slots by App Service Plan"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "Inventory"
+            },
+            "name": "Inventory Group"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "## Azure App Service Metrics Dashboard\r\nExplore and compare the most important metrics for Azure App Services and understand your usage trends easily. ([Azure App Service monitoring data reference](https://learn.microsoft.com/en-us/azure/app-service/monitor-app-service-reference))",
+                    "style": "upsell"
+                  },
+                  "name": "text - Monitor - Main Title"
+                },
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "### App Service Plan\r\n[Azure App Service Plans Metrics](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/supported-metrics/microsoft-web-serverfarms-metrics)",
+                    "style": "upsell"
+                  },
+                  "name": "text - Monitor - App Service Plans"
                 },
                 {
                   "type": 10,
@@ -494,16 +1307,18 @@
                     ],
                     "timeContextFromParameter": "TimeRange",
                     "timeContext": {
-                      "durationMs": 604800000
+                      "durationMs": 0
                     },
                     "metrics": [
                       {
                         "namespace": "microsoft.web/serverfarms",
                         "metric": "microsoft.web/serverfarms--CpuPercentage",
-                        "aggregation": 4
+                        "aggregation": 4,
+                        "splitBy": null
                       }
                     ],
                     "title": "CPU Percentage (Avg)",
+                    "showOpenInMe": true,
                     "gridSettings": {
                       "rowLimit": 10000
                     }
@@ -526,7 +1341,7 @@
                     ],
                     "timeContextFromParameter": "TimeRange",
                     "timeContext": {
-                      "durationMs": 604800000
+                      "durationMs": 86400000
                     },
                     "metrics": [
                       {
@@ -536,6 +1351,7 @@
                       }
                     ],
                     "title": "Memory Percentage (Avg)",
+                    "showOpenInMe": true,
                     "gridSettings": {
                       "rowLimit": 10000
                     }
@@ -544,12 +1360,624 @@
                   "name": "metric - App Service Plan Memory (Avg)"
                 },
                 {
+                  "type": 12,
+                  "content": {
+                    "version": "NotebookGroup/1.0",
+                    "groupType": "editable",
+                    "title": "Additional Metrics",
+                    "expandable": true,
+                    "items": [
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "Data",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--BytesReceived",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "Data In (Sum)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service Plan - Data In"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--BytesSent",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "Data Out (Sum)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service Plan - Data Out"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servive Plan - Data"
+                      },
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "Sockets",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--SocketInboundAll",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "Socket Count for Inbound Requests (Avg)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service Plan - Socket Count for Inbound Requests"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--SocketOutboundAll",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "Socket Count for Outbound Requests (Avg)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service Plan - Socket Count for Outbound Requests "
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--SocketLoopback",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "Socket Count for Looback Connections (Avg)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service Plan - Socket Count for Looback Connections"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--SocketOutboundEstablished",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "Established Socket Count for Outbound Requests (Avg)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service Plan - Established Socket Count for Outbound Requests"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servive Plan - Sockets"
+                      },
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "TCP",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--TcpClosing",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "TCP Closing (Avg)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service Plan - TCP Closing"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--TcpCloseWait",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "TCP Closing Wait (Avg)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service Plan - TCP Closing Wait"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--TcpTimeWait",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "TCP Time Wait (Avg)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service Plan - TCP Time Wait"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--TcpEstablished",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "TCP Established (Avg)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service Plan - TCP Established"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--TcpFinWait1",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "TCP Fin Wait 1 (Avg)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service Plan - TCP Fin Wait 1"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--TcpFinWait2",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "TCP Fin Wait 2 (Avg)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service Plan - TCP Fin Wait 2"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--TcpSynSent",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "TCP Syn Sent (Avg)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service Plan - TCP Syn Sent"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--TcpSynReceived",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "TCP Syn Received (Avg)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service Plan - TCP Syn Received"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--TcpLastAck",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "TCP Last Ack (Avg)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service Plan - TCP Last Ack"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servive Plan - TCP"
+                      },
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "Queue Length",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--DiskQueueLength",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "Disk Queue Length (Avg)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service Plan - Disk Queue Length"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/serverfarms",
+                                "metricScope": 0,
+                                "resourceParameter": "AppSP",
+                                "resourceIds": [
+                                  "{AppSP}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/serverfarms",
+                                    "metric": "microsoft.web/serverfarms--HttpQueueLength",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "Http Queue Legth (Avg)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service Plan - Http Queue Legth"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servive Plan - Queue Length"
+                      }
+                    ]
+                  },
+                  "name": "group - App Servive Plan - All Metrics"
+                },
+                {
                   "type": 1,
                   "content": {
-                    "json": "#### App Service\r\n[Azure App Services Metrics](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/supported-metrics/microsoft-web-sites-metrics)",
+                    "json": "### App Service\r\n[Azure App Services Metrics](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/supported-metrics/microsoft-web-sites-metrics)",
                     "style": "upsell"
                   },
-                  "name": "text - 3"
+                  "name": "text - Monitor - App Services"
                 },
                 {
                   "type": 10,
@@ -566,7 +1994,7 @@
                     ],
                     "timeContextFromParameter": "TimeRange",
                     "timeContext": {
-                      "durationMs": 604800000
+                      "durationMs": 86400000
                     },
                     "metrics": [
                       {
@@ -576,9 +2004,11 @@
                       }
                     ],
                     "title": "CPU Time (Sum)",
+                    "showOpenInMe": true,
                     "gridSettings": {
                       "rowLimit": 10000
-                    }
+                    },
+                    "showExportToExcel": true
                   },
                   "customWidth": "50",
                   "name": "metric - App Service CPU Time"
@@ -598,7 +2028,7 @@
                     ],
                     "timeContextFromParameter": "TimeRange",
                     "timeContext": {
-                      "durationMs": 604800000
+                      "durationMs": 86400000
                     },
                     "metrics": [
                       {
@@ -608,6 +2038,7 @@
                       }
                     ],
                     "title": "Memory Working Set (Avg)",
+                    "showOpenInMe": true,
                     "gridSettings": {
                       "rowLimit": 10000
                     }
@@ -616,12 +2047,860 @@
                   "name": "metric - App Service memory working set"
                 },
                 {
+                  "type": 12,
+                  "content": {
+                    "version": "NotebookGroup/1.0",
+                    "groupType": "editable",
+                    "title": "Additonal Metrics",
+                    "expandable": true,
+                    "items": [
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "Requests, Response",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--Requests",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "Requests (Sum)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - Requests"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--HttpResponseTime",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "Response Time (Avg)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - Response Time"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servives - Requests - Response"
+                      },
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "Data",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--BytesReceived",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "Data In (Sum)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - Data In"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--BytesSent",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "Data Out (Sum)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - Data Out"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servives - Data"
+                      },
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "HTTP (2xx, 3xx, 4xx, 5xx)",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--Http2xx",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "HTTP 2xx (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - HTTP 2xx"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--Http3xx",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "HTTP 3xx (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "showPin": false,
+                              "name": "metric - App Service - HTTP 3xx"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--Http4xx",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "HTTP 4xx (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - HTTP 4xx"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--Http5xx",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "HTTP Server Errors (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - HTTP Server Errors"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servives - HTTP Metrics"
+                      },
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "HTTP (401, 403, 404, 406)",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--Http401",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "HTTP 401 (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service - HTTP 401"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--Http403",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "HTTP 403 (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service - HTTP 403"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--Http404",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "HTTP 404 (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service - HTTP 404"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--Http406",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "HTTP 406 (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service - HTTP 406"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servives - HTTP Metrics 2"
+                      },
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "IO (Input/Output)",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--IoReadBytesPerSecond",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "IO Read bytes Per Secons (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - IO Read bytes Per Secons"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--IoWriteBytesPerSecond",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "IO Write bytes Per Secons (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - IO Write bytes Per Secons"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--IoReadOperationsPerSecond",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "IO Read Operations Per Secons (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - IO Read Operations Per Secons"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--IoWriteOperationsPerSecond",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "IO Write Operations Per Secons (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - IO Write Operations Per Secons"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servives - IO Metrics"
+                      },
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "Garbage Collections",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--Gen0Collections",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "Gen 0 Garbage Collection (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service - Gen 0 Garbage Collection"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--Gen1Collections",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "Gen 1 Garbage Collection (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service - Gen 1 Garbage Collection"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--Gen2Collections",
+                                    "aggregation": 1
+                                  }
+                                ],
+                                "title": "Gen 2 Garbage Collection (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service - Gen 2 Garbage Collection"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servives - Garbage Collections Metrics"
+                      },
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "Others",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--CurrentAssemblies",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "Current Assemblies (Avg)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - Current Assemblies"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--Threads",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "Thread Count (Avg)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - Thread Count"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--FileSystemUsage",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "File System Usage (Avg)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - File System Usage"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 86400000
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites",
+                                    "metric": "microsoft.web/sites--InstanceCount",
+                                    "aggregation": 4
+                                  }
+                                ],
+                                "title": "Automatic Scaling Instance Count (Avg)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - Automatic Scaling Instance Count"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servives - Others"
+                      }
+                    ]
+                  },
+                  "name": "group - App Servives - All Metrics"
+                },
+                {
                   "type": 1,
                   "content": {
-                    "json": "#### Slots\r\n[Azure Staging slots Metrics](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/supported-metrics/microsoft-web-sites-slots-metrics)",
+                    "json": "### Slots\r\n[Azure Staging slots Metrics](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/supported-metrics/microsoft-web-sites-slots-metrics)",
                     "style": "upsell"
                   },
-                  "name": "text - 5 - Copy - Copy - Copy"
+                  "name": "text - Monitor - Slots"
                 },
                 {
                   "type": 10,
@@ -638,16 +2917,18 @@
                     ],
                     "timeContextFromParameter": "TimeRange",
                     "timeContext": {
-                      "durationMs": 604800000
+                      "durationMs": 0
                     },
                     "metrics": [
                       {
                         "namespace": "microsoft.web/sites/slots",
                         "metric": "microsoft.web/sites/slots--CpuTime",
-                        "aggregation": 1
+                        "aggregation": 1,
+                        "splitBy": null
                       }
                     ],
                     "title": "CPU Time (Sum)",
+                    "showOpenInMe": true,
                     "gridSettings": {
                       "rowLimit": 10000
                     }
@@ -670,7 +2951,7 @@
                     ],
                     "timeContextFromParameter": "TimeRange",
                     "timeContext": {
-                      "durationMs": 604800000
+                      "durationMs": 86400000
                     },
                     "metrics": [
                       {
@@ -680,12 +2961,1137 @@
                       }
                     ],
                     "title": "Memory Working Set (Avg)",
+                    "showOpenInMe": true,
                     "gridSettings": {
                       "rowLimit": 10000
                     }
                   },
                   "customWidth": "50",
                   "name": "metric - App Service Slots Memory working set"
+                },
+                {
+                  "type": 12,
+                  "content": {
+                    "version": "NotebookGroup/1.0",
+                    "groupType": "editable",
+                    "title": "Additonal Metrics",
+                    "expandable": true,
+                    "items": [
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "Requests, Response",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--Requests",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "Requests (Sum)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service (slots) - Requests"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--HttpResponseTime",
+                                    "aggregation": 4,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "Response Time (Avg)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service (slots) - Response Time"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--RequestsInApplicationQueue",
+                                    "aggregation": 4,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "Requests In Application Queue (Avg)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service (slots) - Requests In Application Queue"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servives (slots) - Requests - Response"
+                      },
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "Data",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--BytesReceived",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "Data In (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service (slots) - Data In"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--BytesSent",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "Data Out (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service (slots) - Data Out"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servives (slots) - Data"
+                      },
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "HTTP (2xx, 3xx, 4xx, 5xx)",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--Http2xx",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "HTTP 2xx (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service (slots) - HTTP 2xx"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--Http3xx",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "HTTP 3xx (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "showPin": false,
+                              "name": "metric - App Service (slots) - HTTP 3xx"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--Http4xx",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "HTTP 4xx (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service (slots) - HTTP 4xx"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--Http5xx",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "HTTP Server Errors (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service (slots) - HTTP Server Errors"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servives (slots) - HTTP Metrics"
+                      },
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "HTTP (401, 403, 404, 406)",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--Http401",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "HTTP 401 (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service (slots) - HTTP 401"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--Http403",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "HTTP 403 (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service - HTTP 403"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--Http404",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "HTTP 404 (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service (slots) - HTTP 404"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--Http406",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "HTTP 406 (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service (slots) - HTTP 406"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servives (slots) - HTTP Metrics 2"
+                      },
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "IO (Input/Output)",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--IoReadBytesPerSecond",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "IO Read bytes Per Secons (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "33",
+                              "name": "metric - App Service (slots) - IO Read bytes Per Secons"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--IoWriteBytesPerSecond",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "IO Write bytes Per Secons (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "33",
+                              "name": "metric - App Service (slots) - IO Write bytes Per Secons"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--IoOtherBytesPerSecond",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "IO Other bytes Per Secons (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "33",
+                              "name": "metric - App Service (slots) - IO Other bytes Per Secons"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--IoReadOperationsPerSecond",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "IO Read Operations Per Secons (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "33",
+                              "name": "metric - App Service (slots) - IO Read Operations Per Secons"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--IoWriteOperationsPerSecond",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "IO Write Operations Per Secons (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "33",
+                              "name": "metric - App Service (slots) - IO Write Operations Per Secons"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--IoOtherOperationsPerSecond",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "IO Other Operations Per Secons (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "33",
+                              "name": "metric - App Service (slots) - IO Other Operations Per Secons"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servives (slots) - IO Metrics"
+                      },
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "Garbage Collections",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--Gen0Collections",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "Gen 0 Garbage Collection (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service (slots) - Gen 0 Garbage Collection"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--Gen1Collections",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "Gen 1 Garbage Collection (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service (slots) - Gen 1 Garbage Collection"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--Gen2Collections",
+                                    "aggregation": 1,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "Gen 2 Garbage Collection (Sum)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "25",
+                              "name": "metric - App Service - Gen 2 Garbage Collection"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servives (slots) - Garbage Collections Metrics"
+                      },
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "App Domains",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--TotalAppDomains",
+                                    "aggregation": 4,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "Total App Domains (Avg)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service (slots) - Total App Domains"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--TotalAppDomainsUnloaded",
+                                    "aggregation": 4,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "Total App Domains Unloaded (Avg)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service (slots) - Total App Domains Unloaded"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servives (slots) - App Domains"
+                      },
+                      {
+                        "type": 12,
+                        "content": {
+                          "version": "NotebookGroup/1.0",
+                          "groupType": "editable",
+                          "title": "Others",
+                          "expandable": true,
+                          "items": [
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--CurrentAssemblies",
+                                    "aggregation": 4,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "Current Assemblies (Avg)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - Current Assemblies"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--Threads",
+                                    "aggregation": 4,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "Thread Count (Avg)",
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service - Thread Count"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--FileSystemUsage",
+                                    "aggregation": 4,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "File System Usage (Avg)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service (slots) - File System Usage"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--AppConnections",
+                                    "aggregation": 4,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "Connections (Avg)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service (slots) - Connections"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--Handles",
+                                    "aggregation": 4,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "Handle Count (Avg)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service (slots) - Handle Count"
+                            },
+                            {
+                              "type": 10,
+                              "content": {
+                                "chartId": "workbook4bc1643d-e516-4433-80c5-58617d38b082",
+                                "version": "MetricsItem/2.0",
+                                "size": 0,
+                                "chartType": 2,
+                                "resourceType": "microsoft.web/sites/slots",
+                                "metricScope": 0,
+                                "resourceParameter": "Apps",
+                                "resourceIds": [
+                                  "{Apps}"
+                                ],
+                                "timeContextFromParameter": "TimeRange",
+                                "timeContext": {
+                                  "durationMs": 0
+                                },
+                                "metrics": [
+                                  {
+                                    "namespace": "microsoft.web/sites/slots",
+                                    "metric": "microsoft.web/sites/slots--PrivateBytes",
+                                    "aggregation": 4,
+                                    "splitBy": null
+                                  }
+                                ],
+                                "title": "Private Bytes (Avg)",
+                                "showOpenInMe": true,
+                                "gridSettings": {
+                                  "rowLimit": 10000
+                                }
+                              },
+                              "customWidth": "50",
+                              "name": "metric - App Service (slots) - Private Bytes"
+                            }
+                          ]
+                        },
+                        "name": "group - App Servives (slots) - Others"
+                      }
+                    ]
+                  },
+                  "name": "group - App Servives (slots) - All Metrics"
                 }
               ]
             },
