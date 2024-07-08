@@ -4,13 +4,17 @@ The 'Azure App Services Insights' workbook offers a comprehensive view of your A
 
 It enables you to delve into and compare key metrics effortlessly, gaining insights into usage trends, optimizing performance, and guiding strategic decisions effectively.
 
+### Overview
+
 ![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/128f640f-7aa3-41dd-bd49-7ea944b28404)
+
+### Monitor
 
 ![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/8cff5edc-fa0d-4e3f-8e61-0c34d64d87f7)
 
 ![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/3cd05772-b07d-469e-a717-b1ab1106b5f3)
 
-### Additional Metrics
+#### Additional Metrics
 
 Expanding the Additional Metrics will allow to view and compare all the Metrics supported by the resource type. (group by categories)
 
@@ -21,6 +25,12 @@ Expanding the Additional Metrics will allow to view and compare all the Metrics 
 ![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/a603f93b-2520-4541-96d4-790a410406cd)
 
 ![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/8b7adac7-52a5-4286-acef-b5259358b4b4)
+
+### Inventory
+
+The Inventory dashboard provide an holistic view of all App Services resources.
+
+![image](https://github.com/dolevshor/Azure-AppServices-Insights/assets/69309933/aebe7d80-4045-4593-8482-09c491471562)
 
 
 ## Introduction
